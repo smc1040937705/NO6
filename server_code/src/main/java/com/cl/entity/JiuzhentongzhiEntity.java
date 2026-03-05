@@ -100,9 +100,26 @@ public class JiuzhentongzhiEntity<T> implements Serializable {
 	/**
 	 * 通知备注
 	 */
-					
+				
 	private String tongzhibeizhu;
-	
+
+	/**
+	 * 发送状态
+	 */
+				
+	private String fafangzhuangtai;
+
+	/**
+	 * 失败原因
+	 */
+				
+	private String shibaireason;
+
+	/**
+	 * 重试次数
+	 */
+				
+	private Integer chongshishu;
 
 	@JsonFormat(locale="zh", timezone="GMT+8", pattern="yyyy-MM-dd HH:mm:ss")
 	@DateTimeFormat
@@ -216,6 +233,42 @@ public class JiuzhentongzhiEntity<T> implements Serializable {
 	 */
 	public String getTongzhibeizhu() {
 		return tongzhibeizhu;
+	}
+	/**
+	 * 设置：发送状态
+	 */
+	public void setFafangzhuangtai(String fafangzhuangtai) {
+		this.fafangzhuangtai = fafangzhuangtai;
+	}
+	/**
+	 * 获取：发送状态
+	 */
+	public String getFafangzhuangtai() {
+		return fafangzhuangtai;
+	}
+	/**
+	 * 设置：失败原因
+	 */
+	public void setShibaireason(String shibaireason) {
+		this.shibaireason = shibaireason;
+	}
+	/**
+	 * 获取：失败原因
+	 */
+	public String getShibaireason() {
+		return shibaireason;
+	}
+	/**
+	 * 设置：重试次数
+	 */
+	public void setChongshishu(Integer chongshishu) {
+		this.chongshishu = chongshishu;
+	}
+	/**
+	 * 获取：重试次数
+	 */
+	public Integer getChongshishu() {
+		return chongshishu;
 	}
 
 }

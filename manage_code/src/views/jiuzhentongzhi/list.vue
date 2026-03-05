@@ -139,6 +139,41 @@
 						{{scope.row.tongzhibeizhu}}
 					</template>
 				</el-table-column>
+				<el-table-column min-width="140"
+					:resizable='true'
+					:sortable='true'
+					align="left"
+					header-align="left"
+					prop="fafangzhuangtai"
+					label="发送状态">
+					<template #default="scope">
+						<el-tag :type="scope.row.fafangzhuangtai === '成功' ? 'success' : scope.row.fafangzhuangtai === '失败' ? 'danger' : 'warning'">
+							{{scope.row.fafangzhuangtai}}
+						</el-tag>
+					</template>
+				</el-table-column>
+				<el-table-column min-width="140"
+					:resizable='true'
+					:sortable='true'
+					align="left"
+					header-align="left"
+					prop="shibaireason"
+					label="失败原因">
+					<template #default="scope">
+						{{scope.row.shibaireason || '-'}}
+					</template>
+				</el-table-column>
+				<el-table-column min-width="140"
+					:resizable='true'
+					:sortable='true'
+					align="left"
+					header-align="left"
+					prop="chongshishu"
+					label="重试次数">
+					<template #default="scope">
+						{{scope.row.chongshishu || 0}}
+					</template>
+				</el-table-column>
 				<el-table-column label="操作" width="300" :resizable='true' :sortable='true' align="left" header-align="left">
 					<template #default="scope">
 						<el-button class="view_btn" type="info" v-if=" btnAuth('jiuzhentongzhi','查看')" @click="infoClick(scope.row.id)">
@@ -154,6 +189,10 @@
 						<el-button class="cross_btn" v-if="btnAuth('jiuzhentongzhi','签到')" type="success" @click="jiuzhenqiandaoCrossAddOrUpdateHandler(scope.row,'cross','','','','')">
 							<i class="iconfont icon-dingdan3"></i>
 							签到
+						</el-button>
+						<el-button class="retry_btn" v-if="scope.row.fafangzhuangtai === '失败'" type="warning" @click="retryClick(scope.row.id)">
+							<i class="iconfont icon-chongshi"></i>
+							重试
 						</el-button>
 					</template>
 				</el-table-column>
@@ -372,6 +411,24 @@
 			}))
 			window.URL.revokeObjectURL(data)
 		})
+	}
+	// 重试发送通知
+	const retryClick = (id) => {
+		ElMessageBox.confirm('是否重试发送通知？', '提示', {
+			confirmButtonText: '是',
+			cancelButtonText: '否',
+			type: 'warning',
+		}).then(() => {
+			context.$http({
+				url: `${tableName}/retry`,
+				method: 'get',
+				params: { id: id }
+			}).then(res => {
+				context?.$toolUtil.message(res.data.msg, 'success',()=>{
+					getList()
+				})
+			})
+		}).catch(_ => {})
 	}
 	import jiuzhenqiandaoFormModel from '@/views/jiuzhenqiandao/formModel'
 	const jiuzhenqiandaoFormModelRef = ref(null)

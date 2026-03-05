@@ -26,9 +26,12 @@ import com.cl.annotation.SysLog;
 
 import com.cl.entity.YishengyuyueEntity;
 import com.cl.entity.view.YishengyuyueView;
+import com.cl.entity.JiuzhentongzhiEntity;
 
 import com.cl.service.YishengyuyueService;
 import com.cl.service.TokenService;
+import com.cl.service.JiuzhentongzhiService;
+import com.cl.service.NotificationService;
 import com.cl.utils.PageUtils;
 import com.cl.utils.R;
 import com.cl.utils.MPUtil;
@@ -47,6 +50,12 @@ import com.cl.utils.CommonUtil;
 public class YishengyuyueController {
     @Autowired
     private YishengyuyueService yishengyuyueService;
+    
+    @Autowired
+    private JiuzhentongzhiService jiuzhentongzhiService;
+    
+    @Autowired
+    private NotificationService notificationService;
 
 
 
@@ -190,9 +199,28 @@ public class YishengyuyueController {
             yishengyuyue.setSfsh(sfsh);
             yishengyuyue.setShhf(shhf);
             list.add(yishengyuyue);
+            
+            // 如果审核通过，发送就诊通知
+            if("是".equals(sfsh)) {
+                sendJiuzhenTongzhi(yishengyuyue);
+            }
         }
         yishengyuyueService.updateBatchById(list);
         return R.ok();
+    }
+    
+    /**
+     * 发送就诊通知
+     */
+    private void sendJiuzhenTongzhi(YishengyuyueEntity yishengyuyue) {
+        try {
+            // 使用通知服务发送所有后续提醒
+            notificationService.sendAllNotifications(yishengyuyue);
+        } catch (Exception e) {
+            // 记录发送失败的日志
+            System.err.println("发送通知失败: " + e.getMessage());
+            // 这里可以添加失败重试机制
+        }
     }
 
 
