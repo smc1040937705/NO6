@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.cl.dao.TongzhijiluDao">
+
+	<!-- 可根据自己的需求，是否要使用 -->
+    <resultMap type="com.cl.entity.TongzhijiluEntity" id="tongzhijiluMap">
+        <result property="tongzhibianhao" column="tongzhibianhao"/>
+        <result property="yuyuebianhao" column="yuyuebianhao"/>
+        <result property="yishengzhanghao" column="yishengzhanghao"/>
+        <result property="zhanghao" column="zhanghao"/>
+        <result property="tongzhileixing" column="tongzhileixing"/>
+        <result property="tongzhineirong" column="tongzhineirong"/>
+        <result property="jihuafasongshijian" column="jihuafasongshijian"/>
+        <result property="shijifasongshijian" column="shijifasongshijian"/>
+        <result property="fasongzhuangtai" column="fasongzhuangtai"/>
+        <result property="shibaiyuanyin" column="shibaiyuanyin"/>
+        <result property="chongshicishu" column="chongshicishu"/>
+        <result property="jieshouzhuangtai" column="jieshouzhuangtai"/>
+        <result property="jieshoushijian" column="jieshoushijian"/>
+    </resultMap>
+
+    <select id="selectListView"
+		resultType="com.cl.entity.view.TongzhijiluView" >
+
+		SELECT  tongzhijilu.* FROM tongzhijilu  tongzhijilu 	        
+        <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+	<select id="selectView"
+		resultType="com.cl.entity.view.TongzhijiluView" >
+		SELECT * FROM tongzhijilu  tongzhijilu <where> 1=1 ${ew.sqlSegment}</where>
+	</select>
+	
+	<select id="selectValue" resultType="map" >
+		select ${params.xColumn} as x,sum(${params.yColumn}) as y from tongzhijilu
+        <where> 1=1 ${ew.sqlSegment}</where>
+        group by ${params.xColumn}
+	</select>
+
+	<select id="selectGroup" resultType="map" >
+		select ${params.column} as ${params.column}, count(*) as total from tongzhijilu
+        <where> 1=1 ${ew.sqlSegment}</where>
+        group by ${params.column}
+	</select>
+
+
+
+</mapper>

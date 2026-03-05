@@ -28,6 +28,7 @@ import com.cl.entity.YishengyuyueEntity;
 import com.cl.entity.view.YishengyuyueView;
 
 import com.cl.service.YishengyuyueService;
+import com.cl.service.NotificationService;
 import com.cl.service.TokenService;
 import com.cl.utils.PageUtils;
 import com.cl.utils.R;
@@ -47,6 +48,9 @@ import com.cl.utils.CommonUtil;
 public class YishengyuyueController {
     @Autowired
     private YishengyuyueService yishengyuyueService;
+
+    @Autowired
+    private NotificationService notificationService;
 
 
 
@@ -192,6 +196,19 @@ public class YishengyuyueController {
             list.add(yishengyuyue);
         }
         yishengyuyueService.updateBatchById(list);
+
+        // 审核通过后发送通知
+        if("是".equals(sfsh)) {
+            for(YishengyuyueEntity yishengyuyue : list) {
+                try {
+                    notificationService.sendAppointmentNotifications(yishengyuyue);
+                } catch (Exception e) {
+                    // 通知发送失败不影响审核操作，记录日志即可
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return R.ok();
     }
 
